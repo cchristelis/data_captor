@@ -79,7 +79,7 @@ web:
   links:
     - uwsgi:uwsgi
   ports:
-    - "88800:8080"
+    - "44800:8080"
 
 # Exactly the same as web but for staging we use a different port.
 stagingweb:
@@ -94,5 +94,5 @@ stagingweb:
   links:
     - uwsgi:uwsgi
   ports:
-    - "88801:8080"
+    - "44801:8080"
 

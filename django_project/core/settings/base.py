@@ -86,6 +86,6 @@ INSTALLED_APPS = (
     'django_forms_bootstrap',
 )
 
-AUTH_USER_MODEL = 'event_mapper.User'
+# AUTH_USER_MODEL = 'event_mapper.User'
 
 LOGIN_URL = '/login'

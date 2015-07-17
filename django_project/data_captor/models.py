@@ -33,6 +33,5 @@ class Reading(models.Model):
         return self.name
 
     class Meta:
-        abstract = True
         app_label = 'data_captor'
 

@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-PROJECT_ID := data_captor
+PROJECT_ID := datacaptor
 
 # ----------------------------------------------------------------------------
 #    P R O D U C T I O N     C O M M A N D S
@@ -13,7 +13,7 @@ deploy: run migrate collectstatic
 	@echo
 	@echo "------------------------------------------------------------------"
 	@echo "Bringing up fresh instance "
-	@echo "You can access it on http://localhost:88800"
+	@echo "You can access it on http://localhost:48800"
 	@echo "------------------------------------------------------------------"
 
 build:

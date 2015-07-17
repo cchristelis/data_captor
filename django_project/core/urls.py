@@ -9,7 +9,7 @@ urlpatterns = patterns(
     '',
     # Enable the admin:
     url(r'^data-captor-admin/', include(admin.site.urls)),
-    url(r'^', include('data_captor.urls', namespace='data_captor')),
+    url(r'^', include('data_captor.urls', namespace='data-captor')),
 )
 
 # expose static files and uploaded media if DEBUG is active
