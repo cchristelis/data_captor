@@ -11,6 +11,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns(
     '',
     url(
+        r'^(?P<imei>[\d]+)/$',
         r'^(?P<imei>[\d]+)$',
         'data_captor.views.add_reading'
     ),
