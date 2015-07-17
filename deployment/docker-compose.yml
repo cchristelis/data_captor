@@ -1,0 +1,98 @@
+#
+# Production server with UWSGI configured to run on port 8080
+#
+# Usage:
+# fig -f fig-.yml <command>
+#
+# Typical useage:
+#
+# fig build
+# fig up -d web
+#
+# See accompanying Make commands for easy collectstatic etc.
+
+# Our main nginx service - this is for testing only - normally
+# You would use a standalone nginx instance running on the host!
+nginx:
+  image: nginx
+  hostname: nginx
+  volumes:
+    - ./nginx-conf:/etc/nginx/conf.d
+  ports:
+    - "0.0.0.0:80:80"
+
+db:
+  image: kartoza/postgis
+  volumes:
+    - ./pg/postgres_data:/var/lib/postgresql
+  environment:
+    - USERNAME=docker
+    - PASS=docker
+
+uwsgi:
+  build: docker-prod
+  hostname: uwsgi
+  environment:
+    - DATABASE_NAME=gis
+    - DATABASE_USERNAME=docker
+    - DATABASE_PASSWORD=docker
+    - DATABASE_HOST=db
+    - DJANGO_SETTINGS_MODULE=core.settings.prod_docker
+    - VIRTUAL_HOST=data-captor.kartoza.org
+    - VIRTUAL_PORT=8080
+  volumes:
+    - ../django_project:/home/web/django_project
+    - ./static:/home/web/static
+    - ./media:/home/web/media
+    - ./reports:/home/web/reports
+    - ./logs:/var/log/
+  links:
+    - db:db
+
+dbbackups:
+  image: kartoza/pg-backup
+  hostname: pg-backups
+  volumes:
+    - ./backups:/backups
+  links:
+    - db:db
+  environment:
+    - DUMPPREFIX=PG_WATCHKEEPER
+    # These are all defaults anyway, but setting explicitly in
+    # case we ever want to ever use different credentials
+    - PGUSER=docker
+    - PGPASSWORD=docker
+    - PGPORT=5432
+    - PGHOST=db
+    - PGDATABASE=gis
+
+# This is normally the main entry point for a production server
+web:
+  image: nginx
+  hostname: nginx
+  volumes:
+    - ./sites-enabled:/etc/nginx/conf.d:ro
+    # I dont use volumes_from as I want to use the ro modifier
+    - ./static:/home/web/static:ro
+    - ./media:/home/web/media:ro
+    - ./logs:/var/log/nginx
+  links:
+    - uwsgi:uwsgi
+  ports:
+    - "88800:8080"
+
+# Exactly the same as web but for staging we use a different port.
+stagingweb:
+  image: nginx
+  hostname: nginx
+  volumes:
+    - ./sites-enabled:/etc/nginx/conf.d:ro
+    # I dont use volumes_from as I want to use the ro modifier
+    - ./static:/home/web/static:ro
+    - ./media:/home/web/media:ro
+    - ./logs:/var/log/nginx
+  links:
+    - uwsgi:uwsgi
+  ports:
+    - "88801:8080"
+

@@ -1,0 +1,16 @@
+Django>=1.8,<1.9
+psycopg2
+pytz
+django-braces
+django-model-utils
+django-pipeline>1.4
+nodeenv
+raven
+django-forms-bootstrap
+# Django rest framework support
+djangorestframework
+markdown
+django-filter
+Pillow
+django-geojson
+simplejson
